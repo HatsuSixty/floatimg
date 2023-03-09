@@ -34,24 +34,7 @@ int ends_with(const char *str, const char *suffix)
     return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
 }
 
-int main(int argc, const char** argv) {
-    if (argc < 2) {
-        fprintf(stderr, "ERROR: Not enough arguments were provided\n");
-        usage(stderr, argv[0]);
-        exit(1);
-    }
-
-    const char* file_path;
-
-    for (int i = 1; i < argc; ++i) {
-        if ((strcmp(argv[i], "--help") == 0) || (strcmp(argv[i], "--h") == 0)) {
-            usage(stdout, argv[0]);
-            exit(0);
-        } else {
-            file_path = argv[i];
-        }
-    }
-
+void floatimg(const char* file_path) {
     if (!(ends_with(file_path, ".jpg")  ||
           ends_with(file_path, ".jpeg") ||
           ends_with(file_path, ".png")  ||
@@ -74,6 +57,8 @@ int main(int argc, const char** argv) {
             exit(1);
         }
     }
+
+    scc(SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0"));
 
     scc(SDL_Init(SDL_INIT_EVERYTHING));
     scc(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP));
@@ -109,6 +94,27 @@ int main(int argc, const char** argv) {
     IMG_Quit();
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+}
+
+int main(int argc, const char** argv) {
+    if (argc < 2) {
+        fprintf(stderr, "ERROR: Not enough arguments were provided\n");
+        usage(stderr, argv[0]);
+        exit(1);
+    }
+
+    const char* file_path;
+
+    for (int i = 1; i < argc; ++i) {
+        if ((strcmp(argv[i], "--help") == 0) || (strcmp(argv[i], "--h") == 0)) {
+            usage(stdout, argv[0]);
+            exit(0);
+        } else {
+            file_path = argv[i];
+        }
+    }
+
+    floatimg(file_path);
 
     return 0;
 }
