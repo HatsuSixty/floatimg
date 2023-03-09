@@ -1,6 +1,6 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -17,10 +17,21 @@ void scc(int code) {
 
 void usage(FILE* stream, const char* program_name) {
     fprintf(stream, "Usage: %s [FLAGS] <IMAGE>\n", program_name);
-    fprintf(stream, "    FLAGS:\n");
-    fprintf(stream, "        --help | -h          Show this help and exit with 0 code\n");
-    fprintf(stream, "    IMAGE:\n");
-    fprintf(stream, "        That is the image that is going to be displayed\n");
+    fprintf(stream, "  FLAGS:\n");
+    fprintf(stream, "    --help | -h          Show this help and exit with 0 code\n");
+    fprintf(stream, "  IMAGE:\n");
+    fprintf(stream, "    The image that is going to be displayed\n");
+}
+
+int ends_with(const char *str, const char *suffix)
+{
+    if (!str || !suffix)
+        return 0;
+    size_t lenstr = strlen(str);
+    size_t lensuffix = strlen(suffix);
+    if (lensuffix >  lenstr)
+        return 0;
+    return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
 }
 
 int main(int argc, const char** argv) {
@@ -41,8 +52,16 @@ int main(int argc, const char** argv) {
         }
     }
 
-    scc(SDL_Init(SDL_INIT_EVERYTHING));
-    scc(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP));
+    if (!(ends_with(file, ".jpg")  ||
+          ends_with(file, ".jpeg") ||
+          ends_with(file, ".png")  ||
+          ends_with(file, ".tif")  ||
+          ends_with(file, ".tiff") ||
+          ends_with(file, ".webp")))
+    {
+        fprintf(stderr, "ERROR: Invalid image format\n");
+        exit(1);
+    }
 
     int width;
     int height;
@@ -55,6 +74,9 @@ int main(int argc, const char** argv) {
             exit(1);
         }
     }
+
+    scc(SDL_Init(SDL_INIT_EVERYTHING));
+    scc(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP));
 
     SDL_Window* window = SDL_CreateShapedWindow(file,
                                                 SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
