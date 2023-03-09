@@ -41,23 +41,23 @@ int main(int argc, const char** argv) {
         exit(1);
     }
 
-    const char* file;
+    const char* file_path;
 
     for (int i = 1; i < argc; ++i) {
         if ((strcmp(argv[i], "--help") == 0) || (strcmp(argv[i], "--h") == 0)) {
             usage(stdout, argv[0]);
             exit(0);
         } else {
-            file = argv[i];
+            file_path = argv[i];
         }
     }
 
-    if (!(ends_with(file, ".jpg")  ||
-          ends_with(file, ".jpeg") ||
-          ends_with(file, ".png")  ||
-          ends_with(file, ".tif")  ||
-          ends_with(file, ".tiff") ||
-          ends_with(file, ".webp")))
+    if (!(ends_with(file_path, ".jpg")  ||
+          ends_with(file_path, ".jpeg") ||
+          ends_with(file_path, ".png")  ||
+          ends_with(file_path, ".tif")  ||
+          ends_with(file_path, ".tiff") ||
+          ends_with(file_path, ".webp")))
     {
         fprintf(stderr, "ERROR: Invalid image format\n");
         exit(1);
@@ -67,7 +67,7 @@ int main(int argc, const char** argv) {
     int height;
     {
         int n;
-        unsigned char *image_data = stbi_load(file, &width, &height, &n, 0);
+        unsigned char *image_data = stbi_load(file_path, &width, &height, &n, 0);
         stbi_image_free(image_data);
         if (image_data == NULL) {
             fprintf(stderr, "ERROR: Invalid image\n");
@@ -78,14 +78,14 @@ int main(int argc, const char** argv) {
     scc(SDL_Init(SDL_INIT_EVERYTHING));
     scc(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP));
 
-    SDL_Window* window = SDL_CreateShapedWindow(file,
+    SDL_Window* window = SDL_CreateShapedWindow(file_path,
                                                 SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                                 width, height, 0);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 
-    SDL_Surface* image = IMG_Load(file);
+    SDL_Surface* image = IMG_Load(file_path);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, image);
     SDL_SetWindowShape(window, image, 0);
 
