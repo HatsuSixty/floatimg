@@ -3,14 +3,14 @@ LIBS = `pkg-config --libs sdl2 SDL2_image` -lm
 
 all: floatimg
 
-libfloatimg.so: libfloatimg.o
-	$(CC) $(CFLAGS) -shared -o libfloatimg.so libfloatimg.o $(LIBS)
+libfloatimg.a: libfloatimg.o
+	ar rcs libfloatimg.a libfloatimg.o
 
 libfloatimg.o: libfloatimg.c
 	$(CC) $(CFLAGS) -o libfloatimg.o -c libfloatimg.c $(LIBS)
 
-floatimg: main.o libfloatimg.so
-	$(CC) $(CFLAGS) -o floatimg main.o libfloatimg.so $(LIBS)
+floatimg: main.o libfloatimg.a
+	$(CC) $(CFLAGS) -o floatimg main.o libfloatimg.a $(LIBS)
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c main.c $(LIBS)

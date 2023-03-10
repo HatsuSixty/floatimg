@@ -1,4 +1,4 @@
 floatimg
 *.o
-*.so
+*.a
 *~
