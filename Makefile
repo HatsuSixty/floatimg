@@ -9,8 +9,8 @@ libfloatimg.a: libfloatimg.o
 libfloatimg.o: libfloatimg.c
 	$(CC) $(CFLAGS) -o libfloatimg.o -c libfloatimg.c $(LIBS)
 
-floatimg: main.o libfloatimg.a
-	$(CC) $(CFLAGS) -o floatimg main.o libfloatimg.a $(LIBS)
+floatimg: floatimg.o libfloatimg.a
+	$(CC) $(CFLAGS) -o floatimg floatimg.o libfloatimg.a $(LIBS)
 
-main.o: main.c
-	$(CC) $(CFLAGS) -c main.c $(LIBS)
+floatimg.o: floatimg.c
+	$(CC) $(CFLAGS) -c floatimg.c $(LIBS)
